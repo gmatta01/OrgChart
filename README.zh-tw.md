@@ -42,9 +42,11 @@ $ npm install orgchart
 ```
 `require('orgchart')`會把orgchart插件追加到jQuery對象上。orgchart模塊本身並不導出任何東西。
 
+可參考這個例子, [在React中使用jQuery Orchart](https://stackblitz.com/edit/vitejs-vite-hqv4nbdt)
+
 ## [gihtub pages實例集合](https://dabeng.github.io/OrgChart/)
-## [基于嵌套table的實例集合](https://codepen.io/collection/AWxGVb/)
 ## [基于嵌套ul的實例集合](https://codepen.io/collection/nWqvzY)
+## [基于嵌套table的實例集合](https://codepen.io/collection/AWxGVb/) (過時)
 
 ### 天馬行空的需求
 - [ul數據源](https://dabeng.github.io/OrgChart/ul-datasource.html)(感謝 [Tobyee的好點子:blush:](https://github.com/dabeng/OrgChart/issues/1))
@@ -68,6 +70,8 @@ $ npm install orgchart
 - [我想通過ajax請求獲得遠程數據源，然後構造組織結構圖](https://dabeng.github.io/OrgChart/ajax-datasource.html)
 
 - [我想按需載入數據源，進而渲染不同的組織結構圖](https://dabeng.github.io/OrgChart/ondemand-loading-data.html)
+
+![ondemand-loading-data](http://dabeng.github.io/OrgChart/img/ondemand-loading-data.gif)
 
 - [我想定制組織結構圖中節點內的結構](https://dabeng.github.io/OrgChart/option-createNode.html)
 
@@ -103,10 +107,6 @@ $ npm install orgchart
 
 我們只需要把css的樣式與數據源中的id字段或css類字段關聯起來就好。
 
-- [我想實現一個多層級（而非深度）的組織結構圖](https://dabeng.github.io/OrgChart/multiple-layers.html)
-
-如果你的組織層級很多，二每個層級下的節點也很多，那麽上面的方案可以采納嘗試。
-
 - [我想構造一個混合布局的（水平方向 + 垂直方向）組織結構圖](https://dabeng.github.io/OrgChart/vertical-level.html)
 
 這個特性的靈感來源于這兩個話題的討論--[Aligning Children Vertical](https://github.com/dabeng/OrgChart/issues/46), [Hybrid(horizontal + vertical) OrgChart](https://github.com/dabeng/OrgChart/issues/61)。感謝[mfahadi](https://github.com/mfahadi)和[Destructrix](https://github.com/Destructrix)建設性的討論:blush:尤其感謝[tedliang](https://github.com/tedliang)提供了非常棒的混合布局的解決方案。
@@ -122,6 +122,78 @@ $ npm install orgchart
 - [我想自己定制節點的內部結構，而非只是”名字和職位“的簡單構成](https://dabeng.github.io/OrgChart/custom-template.html)
 
 沒問題，我們推薦使用ES6的模版字符串。
+
+- [我想將節點安置在特定的層級。 咋做 ?](https://dabeng.github.io/OrgChart/level-offset.html)
+
+![level-offset](http://dabeng.github.io/OrgChart/img/level-offset.png)
+
+你需要的是一個復合的解決方案： **levelOffset data prop** + callback createNode() + CSS custom properties(variables)
+
+- [我想構造一個組織結構圖，每個節點寬度都可以不同的](https://dabeng.github.io/OrgChart/nodes-of-different-widths.html)
+
+![nodes-of-different-widths](http://dabeng.github.io/OrgChart/img/nodes-of-different-widths.png)
+
+- [我想在混合布局中實現拖/放功能](https://dabeng.github.io/OrgChart/drag-drop-hybrid-chart.html)
+
+- [我想指定從某一分支開始，其下所有子節點都以垂直樣式顯示](https://dabeng.github.io/OrgChart/data-prop-hybrid.html)
+
+![data-prop-hybrid](http://dabeng.github.io/OrgChart/img/data-prop-hybrid.png)
+
+**hybrid data property** 就派上用場了。 在數據源的某個節點中提供"hybrid"屬性，那麽它的所有後代節點都會垂直布局。
+
+- [我想用Font Awesome圖標代替內置的圖標](https://dabeng.github.io/OrgChart/custom-icons.html)
+
+- [子節點眾多的時候，我想以一種壓縮起來的展示方式盡可能節省空間](https://dabeng.github.io/OrgChart/data-prop-compact.html)
+
+![data-prop-compact](http://dabeng.github.io/OrgChart/img/data-prop-compact.png)
+
+**compact data property** 就派上用場了。在數據源的某個節點裏提供了"compact"屬性，並賦為真值，那麽它和它的子節點就會展示為壓縮模式。
+
+- [我想構造族譜，家譜，宗譜的關系圖](https://dabeng.github.io/OrgChart/family-tree.html)
+
+![family-tree](http://dabeng.github.io/OrgChart/img/family-tree.png)
+
+我們使用如下的二維數組數據源來構建家譜。“outsider”代表外姓人。
+
+```
+var datascource = [
+  [
+    { 'id': '8', 'name': 'Lao Ye', 'title': 'Grandfather' },
+    { 
+      'id': '1', 'name': 'Lao Lao', 'title': 'Grandmother', 'outsider': true,
+      'children': [
+        [
+          { 'id': '2', 'name': 'Bo miao', 'title': 'Aunt' }
+        ],
+        [
+          { 'id': '3', 'name': 'Su Miao', 'title': 'Mother',
+            'children': [
+              [
+              
+                { 'id': '12', 'name': 'Pang Pang', 'title': 'Wife', 'outsider': true,
+                  'children': [
+                    [{ 'id': '7', 'name': 'Dan Dan', 'title': 'Daughter' }],
+                    [{ 'id': '6', 'name': 'Er Dan', 'title': 'Daughter' }],
+                  ]
+                },
+                { 'id': '5', 'name': 'Hei Hei', 'title': 'Me' },
+              ]
+            ]
+          },
+          { 'id': '9', 'name': 'Tie Hua', 'title': 'Father', 'outsider': true }
+        ],
+        [
+          { 'id': '10', 'name': 'Hong miao', 'title': 'Aunt' }
+        ]
+      ]
+    }
+  ]
+];
+```
+
+- [我想往族譜裏追加一些自定義的標識](https://dabeng.github.io/OrgChart/familytree-custom-properties.html)
+
+![familytree-custom-properties](http://dabeng.github.io/OrgChart/img/familytree-custom-properties.png)
 
 ### 本地運行orgchart
 
@@ -185,10 +257,10 @@ var oc = $('#chartContainerId').orgchart(options);
   <tbody>
     <tr>
       <td>data</td>
-      <td>json / string</td>
+      <td>json / jquery object</td>
       <td>是</td>
       <td></td>
-      <td>用于構造組織結構圖的數據源。它的值可以是JSON或代表ajax請求地址的字符串。</td>
+      <td>用于構造組織結構圖的數據源。它的值可以是JSON或能提供數據的ul元素。</td>
     </tr>
     <tr>
       <td>pan</td>
@@ -238,13 +310,6 @@ var oc = $('#chartContainerId').orgchart(options);
       <td>否</td>
       <td>false</td>
       <td>啓動該選項，用戶點擊了節點的兩側箭頭按鈕時，會展開/折疊一側的兄弟節點；默認的行爲是用戶點擊了節點任何一側的箭頭按鈕，都會折疊起所有的兄弟節點，不區分左右。</td>
-    </tr>
-    <tr>
-      <td>ajaxURL</td>
-      <td>json</td>
-      <td>否</td>
-      <td></td>
-      <td>該選項下面又包括了4個子選項--parent, children, siblings, families（請求父節點及兄弟節點）。顧名思義，不同的子選項代表了請求不同類型的節點時對應的URL地址</td>
     </tr>
     <tr>
       <td>visibleLevel</td>
@@ -363,8 +428,68 @@ var oc = $('#chartContainerId').orgchart(options);
 #### init(newOptions)
 當你想基于新的options或數據源刷新組織結構圖時，這個方法就派上用場了。
 
+#### addAncestors(data, parentId)
+爲當前的組織結構圖增加祖先節點，可以不止壹個層級。
+<table>
+  <thead>
+    <tr>
+      <th>名稱</th>
+      <th>類型</th>
+      <th>必填</th>
+      <th>默認值</th>
+      <th>描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>data</td>
+      <td>json</td>
+      <td>是</td>
+      <td></td>
+      <td>用于構造祖先節點的數據源</td>
+    </tr>
+    <tr>
+      <td>parentId</td>
+      <td>string</td>
+      <td>yes</td>
+      <td></td>
+      <td>將當前的組織結構圖追加到某壹個祖先節點裏，該節點的id</td>
+    </tr>
+  </tbody>
+</table>
+
+#### addDescendants(data, $parent)
+爲指定的父節點增加後代節點。
+<table>
+  <thead>
+    <tr>
+      <th>名稱</th>
+      <th>類型</th>
+      <th>必填</th>
+      <th>默認值</th>
+      <th>描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>data</td>
+      <td>array</td>
+      <td>yes</td>
+      <td></td>
+      <td>用于構造後代節點的數據源</td>
+    </tr>
+    <tr>
+      <td>$parent</td>
+      <td>jquery object</td>
+      <td>yes</td>
+      <td></td>
+      <td>後代節點要追加到的父節點對象</td>
+    </tr>
+  </tbody>
+</table>
+
 #### addParent(data)
-Adds parent node(actullay it's always root node) for current orgchart.
+爲當前的組織結構圖增加父節點。
 <table>
   <thead>
     <tr>
@@ -757,11 +882,6 @@ Adds parent node(actullay it's always root node) for current orgchart.
       <td>init.orgchart</td>
       <td>chart</td>
       <td>當組織結構圖初始化完成時，該事件觸發。在響應事件處理器中，你可以訪問到渲染出的任意節點。</td>
-    </tr>
-    <tr>
-      <td>load-[relation].orgchart</td>
-      <td></td>
-      <td>在按需請求數據場景中，每次載入新節點後，觸發該事件。<b>[relation]</b>的可選值是parent, children, siblings。</td>
     </tr>
     <tr>
       <td>show-[relation].orgchart</td>
